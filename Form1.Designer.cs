@@ -36,7 +36,6 @@
             this.haciaDelanteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goButton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView)).BeginInit();
@@ -118,24 +117,15 @@
             this.comboBox1.Size = new System.Drawing.Size(705, 24);
             this.comboBox1.TabIndex = 3;
             // 
-            // webBrowser1
-            // 
-            this.webBrowser1.Location = new System.Drawing.Point(13, 58);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(69, 67);
-            this.webBrowser1.TabIndex = 4;
-            this.webBrowser1.Visible = false;
-            // 
             // webView
             // 
             this.webView.AllowExternalDrop = true;
             this.webView.CreationProperties = null;
             this.webView.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView.Location = new System.Drawing.Point(97, 71);
+            this.webView.Location = new System.Drawing.Point(0, 63);
             this.webView.Name = "webView";
-            this.webView.Size = new System.Drawing.Size(621, 338);
-            this.webView.Source = new System.Uri("https://www.microsoft.com", System.UriKind.Absolute);
+            this.webView.Size = new System.Drawing.Size(800, 388);
+            this.webView.Source = new System.Uri("https://www.google.com", System.UriKind.Absolute);
             this.webView.TabIndex = 5;
             this.webView.ZoomFactor = 1D;
             this.webView.Click += new System.EventHandler(this.webView_Click);
@@ -146,7 +136,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.webView);
-            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.menuStrip1);
@@ -173,7 +162,6 @@
         private System.Windows.Forms.ToolStripMenuItem haciaDelanteToolStripMenuItem;
         private System.Windows.Forms.Button goButton;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.WebBrowser webBrowser1;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView;
     }
 }
