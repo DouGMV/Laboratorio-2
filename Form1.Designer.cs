@@ -105,13 +105,6 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "https://www.youtube.com/",
-            "https://www.mesoamericana.edu.gt/",
-            "https://www.twitch.tv/",
-            "https://www.lucidchart.com/pages/es",
-            "https://music.youtube.com/",
-            "https://www.intelaf.com/"});
             this.comboBox1.Location = new System.Drawing.Point(13, 28);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(705, 24);

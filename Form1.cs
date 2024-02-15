@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using System.IO;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.LinkLabel;
+using System.Reflection;
 
 namespace Laboratorio__2
 {
@@ -54,6 +58,13 @@ namespace Laboratorio__2
             comboBox1.Width = goButton.Left - comboBox1.Left;
         }
 
+        private void Guardar(string fileName, string texto)
+        {
+            FileStream flujo = new FileStream(fileName, FileMode.Append, FileAccess.Write);
+            StreamWriter escritor = new StreamWriter(flujo);
+            escritor.WriteLine(texto);
+            escritor.Close();
+        }
         private void BotonIr_Click(object sender, EventArgs e)
         {
             string link = "";
@@ -66,6 +77,8 @@ namespace Laboratorio__2
             {
                 webView.CoreWebView2.Navigate(link);
             }
+
+            Guardar(@"C:\Users\Sir_d\Documents\Historial.txt", comboBox1.Text);
         }
 
         private void inicioToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,7 +98,16 @@ namespace Laboratorio__2
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            string line;
+            int counter = 0;
             
+            StreamReader lector = new StreamReader(@"C:\Users\Sir_d\Documents\Historial.txt");
+            while ((line = lector.ReadLine()) != null)
+            {
+                comboBox1.Items.Add(line);
+                counter++;
+            }
+            lector.Close();
         }
 
         private void webView_Click(object sender, EventArgs e)
