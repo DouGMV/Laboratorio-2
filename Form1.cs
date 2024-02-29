@@ -12,11 +12,14 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.LinkLabel;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Laboratorio__2
 {
     public partial class Form1 : Form
     {
+        List<URL> urls = new List<URL>();
         public Form1()
         {
             InitializeComponent();
@@ -65,20 +68,87 @@ namespace Laboratorio__2
             escritor.WriteLine(texto);
             escritor.Close();
         }
+
+        private void Leer()
+        {
+            string fileName = "Historial.txt";
+
+            FileStream stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
+            StreamReader reader = new StreamReader(stream);
+
+            while (reader.Peek() > -1)
+            {
+                //Una url para ir guardando cada 3 lineas que se leen del archivo
+                URL url = new URL();
+                url.Pagina = reader.ReadLine();
+                url.Veces = Convert.ToInt32(reader.ReadLine());
+                url.Fecha = Convert.ToDateTime(reader.ReadLine());
+
+                //La url con sus datos se guarda en la lista
+                urls.Add(url);
+            }
+            reader.Close();
+
+            comboBox1.DisplayMember = "Pagina";
+            comboBox1.DataSource = urls;
+            comboBox1.Refresh();
+        }
+
+        private void Grabar(string fileName)
+        {
+            FileStream stream = new FileStream(fileName, FileMode .OpenOrCreate, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+            foreach(var u in urls)
+            {
+                writer.WriteLine(u.Pagina);
+                writer.WriteLine(u.Veces);
+                writer.WriteLine(u.Fecha);
+            }
+            writer.Close();
+        }
+
         private void BotonIr_Click(object sender, EventArgs e)
         {
-            string link = "";
-            if (!(comboBox1.Text.Contains(".")))
+            string url = comboBox1.Text.ToString();
+            if(url.Contains(".") || url.Contains("/") || url.Contains(":"))
             {
-                link = "https://www.google.com/search?q=" + comboBox1.Text;
+                if (url.Contains("https"))
+                    webView.CoreWebView2.Navigate(url);
+                else
+                {
+                    url = "https://" + url;
+                    webView.CoreWebView2.Navigate(url);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(url))
+                {
+                    url = "https://www.google.com/search?q=" + url;
+                    webView.CoreWebView2.Navigate(url);
+                }
+
+                URL urlExiste = urls.Find(u => u.Pagina == url);
+                if(urlExiste == null)
+                {
+                    URL urlNueva = new URL();
+                    urlNueva.Pagina = url;
+                    urlNueva.Veces = 1;
+                    urlNueva.Fecha = DateTime.Now;
+                    urls.Add(urlNueva);
+                    Grabar(@"C:\Users\Sir_d\Documents\Historial.txt");
+                    webView.CoreWebView2.Navigate(url);
+                }
+                else
+                {
+                    urlExiste.Veces++;
+                    urlExiste.Fecha = DateTime.Now;
+                    Grabar(@"C:\Users\Sir_d\Documents\Historial.txt");
+                    webView.CoreWebView2.Navigate(urlExiste.Pagina);
+                }
             }
 
-            if(webView != null && webView.CoreWebView2 != null)
-            {
-                webView.CoreWebView2.Navigate(link);
-            }
-
-            Guardar(@"C:\Users\Sir_d\Documents\Historial.txt", comboBox1.Text);
         }
 
         private void inicioToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,16 +168,7 @@ namespace Laboratorio__2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string line;
-            int counter = 0;
-            
-            StreamReader lector = new StreamReader(@"C:\Users\Sir_d\Documents\Historial.txt");
-            while ((line = lector.ReadLine()) != null)
-            {
-                comboBox1.Items.Add(line);
-                counter++;
-            }
-            lector.Close();
+            Leer();
         }
 
         private void webView_Click(object sender, EventArgs e)
